@@ -1,29 +1,30 @@
 import peewee
 
-
 db = peewee.SqliteDatabase('house_in_toronto.db')
 
 # db = peewee.PostgresqlDatabase(
-#     'database_name',  # Required by Peewee.
+#     'postgres',  # Required by Peewee.
 #     user='postgres',  # Will be passed directly to psycopg2.
-#     password='secret',  # Ditto.
+#     password='17122020',  # Ditto.
 #     host='localhost')  # Ditto.
 
 
 class Advertisement(peewee.Model):
-    id = peewee.IntegerField(primary_key=True)
-    image = peewee.CharField()
-    title = peewee.CharField()
-    data = peewee.CharField()
-    beds = peewee.CharField()
-    descriptions = peewee.CharField()
-    prise = peewee.CharField()
+    id = peewee.IntegerField(primary_key=True, unique=True)
+    image = peewee.CharField(max_length=3000)
+    title = peewee.CharField(max_length=3000)
+    data = peewee.CharField(max_length=3000)
+    beds = peewee.CharField(max_length=3000)
+    descriptions = peewee.CharField(max_length=3000)
+    prise = peewee.CharField(max_length=3000)
 
     class Meta:
         database = db
         db_table = 'advertisements'
 
 
+# db.connect()
+# db.create_tables([Advertisement])
 Advertisement.create_table()
 
 

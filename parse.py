@@ -64,8 +64,8 @@ def get_all_advertisement():
     first_page_soup = BeautifulSoup(page, "html.parser")
     all_quote = get_single_page_advertisement(first_page_soup)
 
-    for num_page in tqdm(range(2, 94)):
-        page = requests.get(f"{HOME_PAGE}/page-{num_page}/c37l1700273").content
+    for page_index in tqdm(range(2, 94)):
+        page = requests.get(f"{HOME_PAGE}/page-{page_index}/c37l1700273").content
         page_soup = BeautifulSoup(page, "html.parser")
         all_quote.extend(get_single_page_advertisement(page_soup))
 
