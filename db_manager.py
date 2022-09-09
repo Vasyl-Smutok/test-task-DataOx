@@ -1,21 +1,16 @@
 import peewee
 
-db = peewee.SqliteDatabase("house_in_toronto.db")
-
-# db = peewee.PostgresqlDatabase(
-#     'postgres',
-#     user='postgres',
-#     password='17122020',
-#     host='localhost')
+db = peewee.PostgresqlDatabase(
+    "postgres", user="postgres", password="17122020", host="localhost"
+)
 
 
 class Advertisement(peewee.Model):
-    id = peewee.IntegerField(primary_key=True, unique=True)
-    image = peewee.CharField(max_length=255)
-    title = peewee.CharField(max_length=255)
-    data = peewee.DateTimeField()
-    beds = peewee.CharField(max_length=255)
-    descriptions = peewee.CharField(max_length=1000)
+    image = peewee.CharField()
+    title = peewee.CharField()
+    data = peewee.CharField()
+    beds = peewee.CharField()
+    descriptions = peewee.TextField()
     price = peewee.CharField(max_length=63)
     currency = peewee.CharField(max_length=1)
 
@@ -24,8 +19,6 @@ class Advertisement(peewee.Model):
         db_table = "advertisements"
 
 
-# db.connect()
-# db.create_tables([Advertisement])
 Advertisement.create_table()
 
 

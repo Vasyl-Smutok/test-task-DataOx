@@ -1,8 +1,7 @@
-import httpx
-import asyncio
+import time
 import datetime
+import requests
 
-from dataclasses import dataclass
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
@@ -12,25 +11,13 @@ from db_manager import add_data_to_db
 HOME_PAGE = "https://www.kijiji.ca/b-apartments-condos/city-of-toronto/"
 
 
-@dataclass
-class Advertisement:
-    image: str
-    title: str
-    data: str
-    city: str
-    beds: str
-    descriptions: str
-    price: str
-    currency: str
-
-
 def parse_single_advertisement(advertisement_soup: BeautifulSoup):
     title = advertisement_soup.select_one(".title").text.strip()
     unformatted_date = (
         advertisement_soup.select_one(".date-posted").text.strip().replace("/", "-")
     )
     data_is_today = unformatted_date[0] == "<"
-    data = (
+    data = str(
         unformatted_date
         if data_is_today is False
         else datetime.date.today().strftime("%d-%m-%Y")
@@ -78,17 +65,17 @@ def get_single_page_advertisement(page_soup: BeautifulSoup):
 
 
 def get_all_advertisement():
-    response = httpx.get(f"{HOME_PAGE}c37l1700273/")
-    first_page_soup = BeautifulSoup(response.content, "html.parser")
-    all_quote = get_single_page_advertisement(first_page_soup)
+    all_advertisement = []
+    for page in tqdm(range(1, 94)):
+        response = requests.get(f"{HOME_PAGE}/page-{page}/c37l1700273").content
+        page_soup = BeautifulSoup(response, "html.parser")
+        all_advertisement.extend(get_single_page_advertisement(page_soup))
 
-    for page_index in tqdm(range(2, 94)):
-        response = httpx.get(f"{HOME_PAGE}/page-{page_index}/c37l1700273")
-        page_soup = BeautifulSoup(response.content, "html.parser")
-        all_quote.extend(get_single_page_advertisement(page_soup))
-
-    return all_quote
+    return all_advertisement
 
 
 if __name__ == "__main__":
+    start_time = time.perf_counter()
     get_all_advertisement()
+    end_time = time.perf_counter()
+    print(end_time - start_time)
