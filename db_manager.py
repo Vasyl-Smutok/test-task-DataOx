@@ -1,7 +1,10 @@
 import peewee
 
 db = peewee.PostgresqlDatabase(
-    "postgres", user="postgres", password="17122020", host="localhost"
+    "postgres",
+    user="you_user",
+    password="you_password",
+    host="you_host"
 )
 
 
