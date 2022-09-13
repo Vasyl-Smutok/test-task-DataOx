@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 from db_manager import add_data_to_db
 
+PAGES_TO_PARSE = 10
 HOME_PAGE = "https://www.kijiji.ca/b-apartments-condos/city-of-toronto/"
 
 
@@ -60,13 +61,15 @@ def parse_single_advertisement(advertisement_soup: BeautifulSoup):
 
 
 def get_single_page_advertisement(page_soup: BeautifulSoup):
-    quotes = page_soup.select(".search-item")
-    return [parse_single_advertisement(quote) for quote in quotes]
+    advertisements = page_soup.select(".search-item")
+    return [
+        parse_single_advertisement(advertisement) for advertisement in advertisements
+    ]
 
 
 def get_all_advertisement():
     all_advertisement = []
-    for page in tqdm(range(1, 94)):
+    for page in tqdm(range(1, PAGES_TO_PARSE)):
         response = requests.get(f"{HOME_PAGE}/page-{page}/c37l1700273").content
         page_soup = BeautifulSoup(response, "html.parser")
         all_advertisement.extend(get_single_page_advertisement(page_soup))
@@ -78,4 +81,4 @@ if __name__ == "__main__":
     start_time = time.perf_counter()
     get_all_advertisement()
     end_time = time.perf_counter()
-    print(end_time - start_time)
+    print(f"Runtime: {round(end_time - start_time, 2)}")

@@ -1,10 +1,12 @@
+import os
+
 import peewee
 
 db = peewee.PostgresqlDatabase(
-    "postgres",
-    user="you_user",
-    password="you_password",
-    host="you_host"
+    os.environ["DB_NAME"],
+    user=os.environ["DB_USER"],
+    password=os.environ["DB_PASSWORD"],
+    host=os.environ["DB_HOST"],
 )
 
 
